@@ -36,6 +36,33 @@ else
     echo -e "${RED}Erro: 'curl' ou 'wget' não encontrado. Não foi possível buscar o clima.${NC}"
 fi
 
+# --- 4. Resumo de Notícias ---
+echo -e "${BLUE}\n[ 📰 Manchetes do Dia ]${NC}"
+
+# URL do RSS do Google Notícias Brasil - Manchetes Principais
+NEWS_FEED_URL="https://news.google.com/rss?hl=pt-BR&gl=BR&ceid=BR:pt-419"
+
+if command -v curl &> /dev/null
+then
+    # Baixa o RSS e extrai os títulos dos itens (tags <title>)
+    # Pega as primeiras 5 manchetes, removendo tags e ajustando o texto
+    curl -s "$NEWS_FEED_URL" --user-agent "curl" | \
+    grep -oP '<title>\K[^<]+' | \
+    grep -v 'Google Notícias' | \
+    head -n 5 | \
+    sed 's/&apos;/'"'"'/g; s/&quot;/"/g; s/&amp;/&/g; s/&lt;/</g; s/&gt;/>/g' | \
+    awk '{printf "- %s\n", $0}'
+elif command -v wget &> /dev/null
+then
+    wget -qO- "$NEWS_FEED_URL" | \
+    grep -oP '<title>\K[^<]+' | \
+    grep -v 'Google Notícias' | \
+    head -n 5 | \
+    sed 's/&apos;/'"'"'/g; s/&quot;/"/g; s/&amp;/&/g; s/&lt;/</g; s/&gt;/>/g' | \
+    awk '{printf "- %s\n", $0}'
+else
+    echo -e "${RED}Erro: 'curl' ou 'wget' não encontrado. Não foi possível buscar as notícias.${NC}"
+fi
 # --- Linha de separação ---
 echo -e "${GREEN}-------------------------------------------${NC}"
 

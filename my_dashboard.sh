@@ -63,6 +63,21 @@ then
 else
     echo -e "${RED}Erro: 'curl' ou 'wget' não encontrado. Não foi possível buscar as notícias.${NC}"
 fi
+
+# --- 5. Tarefas do Dia ---
+echo -e "${BLUE}\n[ ✅ Suas Tarefas Hoje ]${NC}"
+
+TAREFAS_FILE="TODO.txt"
+
+if [[ -f "$TAREFAS_FILE" ]]; then # Verifica se o arquivo TODO.txt existe
+    if [[ -s "$TAREFAS_FILE" ]]; then # Verifica se o arquivo NÃO está vazio
+        cat "$TAREFAS_FILE" # Lê e imprime o conteúdo do arquivo de tarefas
+    else
+        echo "  Nenhuma tarefa pendente por enquanto! ✨"
+    fi
+else
+    echo "  Crie o arquivo '$TAREFAS_FILE' na pasta do projeto para adicionar suas tarefas."
+fi
 # --- Linha de separação ---
 echo -e "${GREEN}-------------------------------------------${NC}"
 
